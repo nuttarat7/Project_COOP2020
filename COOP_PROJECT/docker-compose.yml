@@ -1,0 +1,41 @@
+version: '3'
+services:
+  db:
+    image: mysql:5.7
+    restart: always
+    volumes:
+      - ./database:/var/lib/mysql
+    env_file:
+      - config.env
+  docx:
+    image: devss/buu_coop_docx:latest
+    restart: always
+    volumes:
+      - ./docx/template:/usr/src/app/template
+    ports:
+      - "8988:7777"
+  fpm:
+    image: devss/buu_coop_fpm:latest
+    restart: always
+    volumes:
+      - ./web_public:/var/app/public
+    env_file:
+      - config.env
+  nginx:
+          #    dns:
+          #  - 10.80.4.11
+          #- 10.4.1.11    
+          #- 8.8.8.8
+    image: devss/buu_coop_nginx:latest
+    restart: always
+    volumes:
+      - ./web_public:/var/app/public
+    env_file:
+      - config.env
+    ports:
+      - "8001:80"
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8902:8080    
